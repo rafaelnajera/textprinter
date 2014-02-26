@@ -11,9 +11,11 @@ textprinter.c
 #include <string.h>
 
 #define MAXLINESIZE 1000
+#define MINTEXTFONTSIZE 8
+#define DEFAULTTEXTFONTSIZE 8
 
 char *usage = "Usage:\n   textprinter [-h]\n"
-              "        [-i <input file>] [-o <output file] [-t title]\n"
+              "        [-i <input file>] [-o <output file] [-t title] [-s fontsize]\n"
               "        [--singlespace] [--semidoublespace] [--doublespace]\n"
               "        [--nolinenumbers]\n";
               
@@ -48,7 +50,7 @@ int main(int argc, char *argv[]) {
    int pageHeight = 792; // 11 in
 
    const char *textFontName = "Monospace";
-   const int textFontSize = 8;
+   int textFontSize = DEFAULTTEXTFONTSIZE;
    int lineHeight = 20;
    const char *titleFontName = "Sans";
    const int titleFontSize = 10;
@@ -95,6 +97,18 @@ int main(int argc, char *argv[]) {
             }
             else {
                inFileName = argv[argi+1];
+               argi++;
+            }
+         }
+         if (argv[argi][1] == 's'){
+            if (argc == (argi+1)){
+               fprintf(stderr, "Please give a font size\n");
+               return 0;
+            }
+            else {
+               textFontSize = atoi(argv[argi+1]);
+               if (textFontSize < MINTEXTFONTSIZE)
+                  textFontSize = MINTEXTFONTSIZE; 
                argi++;
             }
          }
